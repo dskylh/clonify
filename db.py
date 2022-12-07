@@ -1,4 +1,3 @@
-import sqlite3
 import sqlite3 as sq
 
 from music import Music
@@ -41,19 +40,17 @@ class DbConnection:
 
     # deneme icin todo make it right
 
-    def createUser(self, user: User):
+    def addUser(self, username: str, password: str):
         try:
             usrCursor = self.sqliteConnection.cursor()
-            userName = user.userName
-            password = user.password
-            insertQuery = f"INSERT INTO USERS(UserName, Password) VALUES('{userName}', '{password}')"
+            insertQuery = f"INSERT INTO USERS(UserName, Password) VALUES('{username}', '{password}')"
             usrCursor.execute(insertQuery)
             # usrCursor.execute("select * from USERS")
             # print(type(usrCursor))
             # for row in usrCursor:
             #     print(row)
-            usrCursor.close()
             self.sqliteConnection.commit()
+            usrCursor.close()
         except sq.Error as error:
             # 2067 is the error given when an unique constraint is failed
             # only works in python 3.11!!
@@ -77,35 +74,47 @@ class DbConnection:
         except sq.Error as error:
             print("Error occured while inserting into Music table: ", error)
 
-    def getUser(self, username="") -> User:
+    def getUser(self, username=""):
         try:
-            selectQuery = f"SELECT * FROM USERS WHERE UserName='{username}'"
+            selectQuery = f"SELECT * FROM USERS WHERE UserName like '%{username}%'"
             userCursor = self.sqliteConnection.cursor()
             userCursor.execute(selectQuery)
-            userName = userCursor.fetchone()[1]
-            password = userCursor.fetchone()[2]
-            return User(username, password)
+            # for row in userCursor:
+            #     print(row)
+            return userCursor.fetchone()
         except sq.Error as error:
             print("Error occurred while selecting user from database: ", error)
 
-    def getMusic(self, musicName) -> Music:
+    def getMusic(self, musicName):
         try:
             selectQuery = f"SELECT * FROM MUSIC where MusicName like '%{musicName}%'"
             musicCursor = self.sqliteConnection.cursor()
             musicCursor.execute(selectQuery)
             music = musicCursor.fetchone()
-            musicname = music[1]
-            artist = music[2]
-            album = music[3]
-            genre = music[4]
-            pathToMusic = music[5]
-            return Music(musicname, pathToMusic, artist, album, genre)
+            return music
+            # musicname = music[1]
+            # artist = music[2]
+            # album = music[3]
+            # genre = music[4]
+            # pathToMusic = music[5]
         except sq.Error as error:
             print("Error occurred while selecting music from database: ", error)
 
 
 if __name__ == "__main__":
     sqlcon = DbConnection()
+    # sqlcon.addUser("bruh1", "123")
+    # print(sqlcon.sqliteConnection.cursor().execute("Select * from USERS").fetchall())
+    user1 = sqlcon.getUser("bruh1")
+    print(user1)
+    # sqlcon.addMusic("music1", "artist1", "album1", "genre1", "path1")
+    music = sqlcon.getMusic("music1")
+    print(music)
+    # print(user1.userName)
+    
+
+    # sqlcon.addUser(User("bruh", "123"))
+    # print(user.userName)
     # sqlcon.addMusic("Silvera", "music/Gojira - Silvera [OFFICIAL VIDEO].wav",
     #                 artist="Gojira", album="Magma", genre="Metal")
 
