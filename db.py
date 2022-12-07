@@ -1,10 +1,9 @@
+from os import uname
 import sqlite3 as sq
+from typing import Optional
 
 from music import Music
 from user import User
-
-
-# from user import User
 
 
 class DbConnection:
@@ -38,19 +37,13 @@ class DbConnection:
         except sq.Error as error:
             print("Error occurred while initializing database: ", error)
 
-    # deneme icin todo make it right
 
-    def addUser(self, username: str, password: str):
+    def addUser(self, user: User):
+        usrCursor = self.sqliteConnection.cursor()
         try:
-            usrCursor = self.sqliteConnection.cursor()
-            insertQuery = f"INSERT INTO USERS(UserName, Password) VALUES('{username}', '{password}')"
+            insertQuery = f"INSERT INTO USERS(UserName, Password) VALUES('{user.userName}', '{user.password}')"
             usrCursor.execute(insertQuery)
-            # usrCursor.execute("select * from USERS")
-            # print(type(usrCursor))
-            # for row in usrCursor:
-            #     print(row)
             self.sqliteConnection.commit()
-            usrCursor.close()
         except sq.Error as error:
             # 2067 is the error given when an unique constraint is failed
             # only works in python 3.11!!
@@ -58,64 +51,77 @@ class DbConnection:
                 print("Please select a different username.")
             else:
                 print("Something went wrong while adding the user to the database: ", error)
+        finally:
+            usrCursor.close()
 
-    def addMusic(self, musicName: str, pathToMusic: str, artist="", album="", genre=""):
+    def addMusic(self, music: Music):
+        musicCursor = self.sqliteConnection.cursor()
         try:
-            musicCursor = self.sqliteConnection.cursor()
-            insertQuery = f"INSERT INTO MUSIC (MusicName, Artist, Album, Genre, PathToMusic) VALUES ('{musicName}', " \
-                          f"'{artist}', '{album}', '{genre}', '{pathToMusic}') "
+            insertQuery = f"INSERT INTO MUSIC (MusicName, Artist, Album, Genre, PathToMusic) VALUES ('{music.musicName}', " \
+                          f"'{music.artist}', '{music.album}', '{music.genre}', '{music.pathToMusic}') "
             musicCursor.execute(insertQuery)
             musicCursor.execute("Select * from MUSIC")
             # for row in musicCursor:
             #     print(row)
-            musicCursor.close()
             self.sqliteConnection.commit()
 
         except sq.Error as error:
             print("Error occured while inserting into Music table: ", error)
+        finally:
+            musicCursor.close()
 
-    def getUser(self, username=""):
+    def getUser(self, username: str) -> User:
+        userCursor = self.sqliteConnection.cursor()
         try:
-            selectQuery = f"SELECT * FROM USERS WHERE UserName like '%{username}%'"
-            userCursor = self.sqliteConnection.cursor()
+            selectQuery = f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'"
             userCursor.execute(selectQuery)
-            # for row in userCursor:
-            #     print(row)
-            return userCursor.fetchone()
+            fetching = userCursor.fetchone()
+            assert fetching is not None
+            uName = fetching[0]
+            pswd = fetching[1]
+            return User(uName, pswd)
         except sq.Error as error:
             print("Error occurred while selecting user from database: ", error)
+            return User(None, None) 
+        except AssertionError:
+            print("Aradiginiz kullanici bulunamamistir.")
+            return User(None, None) 
+        finally:
+            userCursor.close()
 
-    def getMusic(self, musicName):
+    def getMusics(self, musicName: str) -> list[Music]:
+        musicCursor = self.sqliteConnection.cursor()
         try:
             selectQuery = f"SELECT * FROM MUSIC where MusicName like '%{musicName}%'"
-            musicCursor = self.sqliteConnection.cursor()
             musicCursor.execute(selectQuery)
-            music = musicCursor.fetchone()
-            return music
-            # musicname = music[1]
-            # artist = music[2]
-            # album = music[3]
-            # genre = music[4]
-            # pathToMusic = music[5]
+            selectQueryResult = musicCursor.fetchall()
+            assert selectQueryResult is not None 
+            musicList = [Music(None, None)] 
+            for music in selectQueryResult:
+                print(music)
+                musicList.append(Music(musicName=music[1], 
+                                       pathToMusic=music[5], 
+                                       artist=music[2], 
+                                       album=music[3], 
+                                       genre=music[4]))
+            musicList.pop(0)
+            return musicList
         except sq.Error as error:
             print("Error occurred while selecting music from database: ", error)
+            return [Music(None, None)] 
+        except AssertionError:
+            print("Boyle bir sarki bulunamamistir")
+            return [Music(None, None)]
+        finally:
+            musicCursor.close()
 
 
 if __name__ == "__main__":
     sqlcon = DbConnection()
-    # sqlcon.addUser("bruh1", "123")
-    # print(sqlcon.sqliteConnection.cursor().execute("Select * from USERS").fetchall())
-    user1 = sqlcon.getUser("bruh1")
-    print(user1)
-    # sqlcon.addMusic("music1", "artist1", "album1", "genre1", "path1")
-    music = sqlcon.getMusic("music1")
-    print(music)
+    user1 = sqlcon.getUser("userclas")
     # print(user1.userName)
+    musicList = sqlcon.getMusics("banger")
+    for music in musicList:
+        print(music.musicName)
+
     
-
-    # sqlcon.addUser(User("bruh", "123"))
-    # print(user.userName)
-    # sqlcon.addMusic("Silvera", "music/Gojira - Silvera [OFFICIAL VIDEO].wav",
-    #                 artist="Gojira", album="Magma", genre="Metal")
-
-    # sqlcon.addMusic("MusicName", "abc", artist="artistdeneme", album="albumdeneme")

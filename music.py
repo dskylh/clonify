@@ -1,5 +1,5 @@
 class Music:
-    def __init__(self, musicName: str, pathToMusic: str, artist="", album="", genre=""):
+    def __init__(self, musicName, pathToMusic, artist="", album="", genre=""):
         self.musicName = musicName
         self.artist = artist
         self.album = album
