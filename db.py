@@ -30,7 +30,7 @@ class DbConnection:
             """
             curs.execute(musicTable)
 
-            print("database created")
+            print("Connected to the database")
 
         except sq.Error as error:
             print("Error occurred while initializing database: ", error)
@@ -96,7 +96,7 @@ class DbConnection:
             assert selectQueryResult is not None 
             musicList = [Music(None, None)] 
             for music in selectQueryResult:
-                print(music)
+                # print(music)
                 musicList.append(Music(musicName=music[1], 
                                        pathToMusic=music[5], 
                                        artist=music[2], 
@@ -116,10 +116,11 @@ class DbConnection:
 
 if __name__ == "__main__":
     sqlcon = DbConnection()
-    user1 = sqlcon.getUser("userclas")
+    sqlcon.addUser(User("taha", "taha2003"))
+    # user1 = sqlcon.getUser("userclas")
     # print(user1.userName)
-    musicList = sqlcon.getMusics("banger")
-    for music in musicList:
-        print(music.musicName)
+    # musicList = sqlcon.getMusics("banger")
+    # for music in musicList:
+    #     print(music.musicName)
 
     
