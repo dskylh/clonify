@@ -2,7 +2,7 @@ from customtkinter import *
 from db import DbConnection
 
 
-class Login(CTk):
+class App(CTk):
     def __init__(self):
         super().__init__()
 

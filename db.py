@@ -1,6 +1,4 @@
-from os import uname
 import sqlite3 as sq
-from typing import Optional
 
 from music import Music
 from user import User
