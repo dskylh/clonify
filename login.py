@@ -13,7 +13,6 @@ class Login(CTkToplevel):
 
         self.minsize(350, 250)
 
-        # self.grid_columnconfigure(1, weight=2)
 
         self.username = StringVar()
         self.password= StringVar()
@@ -78,6 +77,4 @@ class Login(CTkToplevel):
             self.infoLabel.configure(text="Veri tabanına bağlanırken bir problem yaşandı")
         finally:
             self.infoLabel.grid(row=4, column=0, columnspan=2, padx= 10, pady=10, sticky="we")
-
-
 
