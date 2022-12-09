@@ -1,4 +1,4 @@
-from pygame import mixer_music as mixer
+from pygame import mixer
 from music import Music
 
 

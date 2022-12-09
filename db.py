@@ -30,8 +30,6 @@ class DbConnection:
             """
             curs.execute(musicTable)
 
-            
-
             print("Connected to the database")
 
         except sq.Error as error:
@@ -49,7 +47,6 @@ class DbConnection:
             # only works in python 3.11!!
             if error.sqlite_errorcode == 2067:
                 print("Please select a different username.")
-            else:
                 print("Something went wrong while adding the user to the database: ", error)
         finally:
             usrCursor.close()
