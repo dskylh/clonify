@@ -96,7 +96,6 @@ class DbConnection:
             assert selectQueryResult is not None 
             musicList = [Music(None, None)] 
             for music in selectQueryResult:
-                # print(music)
                 musicList.append(Music(musicName=music[1], 
                                        pathToMusic=music[5], 
                                        artist=music[2], 
