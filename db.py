@@ -30,6 +30,8 @@ class DbConnection:
             """
             curs.execute(musicTable)
 
+            
+
             print("Connected to the database")
 
         except sq.Error as error:
@@ -67,6 +69,7 @@ class DbConnection:
             print("Error occured while inserting into Music table: ", error)
         finally:
             musicCursor.close()
+
 
     def getUser(self, username: str) -> User:
         userCursor = self.sqliteConnection.cursor()
@@ -117,10 +120,4 @@ class DbConnection:
 if __name__ == "__main__":
     sqlcon = DbConnection()
     sqlcon.addUser(User("taha", "taha2003"))
-    # user1 = sqlcon.getUser("userclas")
-    # print(user1.userName)
-    # musicList = sqlcon.getMusics("banger")
-    # for music in musicList:
-    #     print(music.musicName)
-
     
