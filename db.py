@@ -115,5 +115,4 @@ class DbConnection:
 
 if __name__ == "__main__":
     sqlcon = DbConnection()
-    sqlcon.addUser(User("taha", "taha2003"))
-    
+    sqlcon.addMusic(Music("Silvera", "/home/taha/coding/python/proje/music/Silvera.wav"))
