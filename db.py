@@ -35,7 +35,6 @@ class DbConnection:
         except sq.Error as error:
             print("Error occurred while initializing database: ", error)
 
-
     def addUser(self, user: User):
         usrCursor = self.sqliteConnection.cursor()
         try:
@@ -67,7 +66,6 @@ class DbConnection:
         finally:
             musicCursor.close()
 
-
     def getUser(self, username: str) -> User:
         userCursor = self.sqliteConnection.cursor()
         try:
@@ -80,10 +78,10 @@ class DbConnection:
             return User(uName, pswd)
         except sq.Error as error:
             print("Error occurred while selecting user from database: ", error)
-            return User(None, None) 
+            return User(None, None)
         except AssertionError:
             print("Aradiginiz kullanici bulunamamistir.")
-            return User(None, None) 
+            return User(None, None)
         finally:
             userCursor.close()
 
@@ -93,20 +91,20 @@ class DbConnection:
             selectQuery = f"SELECT * FROM MUSIC where MusicName like '%{musicName}%'"
             musicCursor.execute(selectQuery)
             selectQueryResult = musicCursor.fetchall()
-            assert selectQueryResult is not None 
-            musicList = [Music(None, None)] 
+            assert selectQueryResult is not None
+            musicList = [Music(None, None)]
             for music in selectQueryResult:
                 # print(music)
-                musicList.append(Music(musicName=music[1], 
-                                       pathToMusic=music[5], 
-                                       artist=music[2], 
-                                       album=music[3], 
+                musicList.append(Music(musicName=music[1],
+                                       pathToMusic=music[5],
+                                       artist=music[2],
+                                       album=music[3],
                                        genre=music[4]))
             musicList.pop(0)
             return musicList
         except sq.Error as error:
             print("Error occurred while selecting music from database: ", error)
-            return [Music(None, None)] 
+            return [Music(None, None)]
         except AssertionError:
             print("Boyle bir sarki bulunamamistir")
             return [Music(None, None)]
@@ -117,4 +115,3 @@ class DbConnection:
 if __name__ == "__main__":
     sqlcon = DbConnection()
     sqlcon.addUser(User("taha", "taha2003"))
-    
