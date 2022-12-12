@@ -5,6 +5,7 @@ from sqlite3 import Error as SqError
 
 # from user import User
 
+
 class Login(CTkToplevel):
     def __init__(self, mainWindow: CTk, db: DbConnection):
         super().__init__(mainWindow)
@@ -14,8 +15,6 @@ class Login(CTkToplevel):
         self.title("Giriş")
 
         self.minsize(350, 250)
-
-        # self.grid_columnconfigure(1, weight=2)
 
         self.username = StringVar()
         self.password = StringVar()
@@ -41,6 +40,9 @@ class Login(CTkToplevel):
         self.infoLabel = CTkLabel(self, text="")
 
     def login(self):
+        if self.loggedInUser is not None:
+            print("A user is already logged in")
+            return
         try:
             user = self.db.getUser(self.username.get())
             assert user.userName is not None
@@ -48,6 +50,8 @@ class Login(CTkToplevel):
             if not passcheck:
                 self.infoLabel.configure(text="Sifreniz yanlis!")
             else:
+                self.db.changeUserLoggedIn(user)
+
                 self.infoLabel.configure(text="Giris basarili!")
 
         except AssertionError:

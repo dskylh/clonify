@@ -5,17 +5,20 @@ from db import DbConnection
 
 class Player:
     def __init__(self, library: list[Music]):
-        self.current = None
+        mixer.init()
         self.library = library
-        self.current: Music
+        self.current: Music = self.library[-1]
 
-    def playMusic(self, music: Music):
+    def playMusic(self):
         for m in self.library:
-            if m.musicName == music.musicName:
+            if m.pathToMusic == self.current.pathToMusic:
                 self.current = m
                 mixer_music.load(self.current.pathToMusic)
                 mixer_music.play()
                 print("bruh")
+
+    def changeMusic(self, currentMusic: Music):
+        self.current = currentMusic
 
     def pauseMusic(self):
         mixer_music.stop()
@@ -25,10 +28,6 @@ class Player:
 
     def previousMusic(self):
         previousIndex = self.library.index(self.current) - 1
-        self.current = self.library[previousIndex]
-        mixer_music.load(self.current.pathToMusic)
-
-
-if __name__ == '__main__':
-
-
+        if previousIndex >= 0:
+            self.current = self.library[previousIndex]
+            mixer_music.load(self.current.pathToMusic)
