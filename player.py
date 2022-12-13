@@ -7,15 +7,16 @@ class Player:
     def __init__(self, library: list[Music]):
         mixer.init()
         self.library = library
-        self.current: Music = self.library[-1]
+        self.current: Music = self.library[0]
 
     def playMusic(self):
         for m in self.library:
             if m.pathToMusic == self.current.pathToMusic:
                 self.current = m
                 mixer_music.load(self.current.pathToMusic)
+                print("Calinan muzik: ", self.current.musicName)
                 mixer_music.play()
-                print("bruh")
+                break
 
     def changeMusic(self, currentMusic: Music):
         self.current = currentMusic

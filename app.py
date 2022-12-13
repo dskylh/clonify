@@ -13,11 +13,22 @@ class App(CTk):
         self.library = self.db.getMusics("")
         self.player = Player(library=self.library)
         self.showLoginScreen()
+
+        self.musicNameList = [music.musicName for music in self.library]
+        self.songOptionMenu = CTkOptionMenu(master=self, values=self.musicNameList, command=self.changeCurrentSong)
         self.songButton = CTkButton(self, text="Song", command=self.player.playMusic)
+
         self.songButton.pack()
+        self.songOptionMenu.pack()
 
     def showLoginScreen(self):
         Login(self, self.db)
+
+    def changeCurrentSong(self, choice):
+        for music in self.library:
+            if music.musicName == choice:
+                self.player.current = music
+                break
 
 
 if __name__ == "__main__":

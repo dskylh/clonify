@@ -134,4 +134,5 @@ class DbConnection:
 if __name__ == "__main__":
     sqlcon = DbConnection()
     sqlcon.addMusic(
-        Music("Silvera", "music/Gojira - Silvera [OFFICIAL VIDEO].ogg", artist="Gojira", genre="Metal", album="Magma"))
+        Music("Stranded", "music/Gojira - Stranded [OFFICIAL VIDEO].ogg", artist="Gojira", genre="Metal",
+              album="Magma"))
