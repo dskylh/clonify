@@ -5,7 +5,7 @@ from music import Music
 class Player:
     def __init__(self, library: list[Music]):
         self.library = library
-        self.current:Music
+        self.current: Music
 
     def playMusic(self, music: Music):
         for m in self.library:
@@ -13,7 +13,6 @@ class Player:
                 self.current = m
                 mixer.music.load(self.current.pathToMusic)
                 mixer.music.play()
-
 
     def pauseMusic(self):
         mixer.music.stop()
@@ -25,11 +24,3 @@ class Player:
         previousIndex = self.library.index(self.current) - 1
         self.current = self.library[previousIndex]
         mixer.music.load(self.current.pathToMusic)
-
-
-
-
-
-
-
-
