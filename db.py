@@ -92,9 +92,10 @@ class DbConnection:
         finally:
             userCursor.close()
 
-    # def getLoggedInUser(self) -> User:
-    #     # return self.getUser("taha")
-    #     return User(None, None)
+    def getLoggedInUser(self) -> User:
+        # return self.getUser("taha")
+        return User(None, None)
+
     #
     def getMusics(self, musicName: str) -> list[Music]:
         musicCursor = self.sqliteConnection.cursor()
