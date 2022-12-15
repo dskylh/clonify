@@ -1,14 +1,7 @@
-from customtkinter import (
-    END,
-    CTk,
-    CTkButton,
-    CTkEntry,
-    CTkLabel,
-    CTkToplevel,
-    StringVar,
-)
+from customtkinter import END, CTk, CTkButton, CTkEntry, CTkLabel, CTkToplevel, StringVar
 from db import DbConnection, User
 from sqlite3 import Error as SqError
+
 
 # from user import User
 
@@ -47,6 +40,9 @@ class Login(CTkToplevel):
         self.infoLabel = CTkLabel(self, text="")
 
     def login(self):
+        if self.loggedInUser is not None:
+            print("A user is already logged in")
+            return
         try:
             user = self.db.getUser(self.username.get())
             assert user.userName is not None
@@ -54,23 +50,19 @@ class Login(CTkToplevel):
             if not passcheck:
                 self.infoLabel.configure(text="Sifreniz yanlis!")
             else:
+                self.db.changeUserLoggedIn(user)
+
                 self.infoLabel.configure(text="Giris basarili!")
-                # ONEMLI/IMPORTANT database giris yapan kullaniciyi bildir!
-                self.destroy()
 
         except AssertionError:
             self.infoLabel.configure(text="Kullanici adinizi kontrol ediniz.")
 
         except SqError:
             print("Error occured while connecting to the database: ", SqError)
-            self.infoLabel.configure(
-                text="Veri tabanına bağlanırken bir problem yaşandı"
-            )
+            self.infoLabel.configure(text="Veri tabanına bağlanırken bir problem yaşandı")
 
         finally:
-            self.infoLabel.grid(
-                row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we"
-            )
+            self.infoLabel.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we")
 
     def register(self):
         try:
@@ -87,10 +79,6 @@ class Login(CTkToplevel):
                 self.infoLabel.configure(text="Bu kullanici adi zaten kayitli.")
         except SqError:
             print("Error occured while connecting to the database: ", SqError)
-            self.infoLabel.configure(
-                text="Veri tabanına bağlanırken bir problem yaşandı"
-            )
+            self.infoLabel.configure(text="Veri tabanına bağlanırken bir problem yaşandı")
         finally:
-            self.infoLabel.grid(
-                row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we"
-            )
+            self.infoLabel.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we")

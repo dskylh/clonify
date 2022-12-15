@@ -13,7 +13,8 @@ class DbConnection:
             CREATE TABLE IF NOT EXISTS USERS(
                 UserId INTEGER PRIMARY KEY,
                 UserName VARCHAR(100) NOT NULL UNIQUE,
-                Password VARCHAR(100) NOT NULL
+                Password VARCHAR(100) NOT NULL,
+                Logged_in BOOLEAN NOT NULL
                 );
             """
             curs.execute(userTable)
@@ -38,29 +39,46 @@ class DbConnection:
     def addUser(self, user: User):
         usrCursor = self.sqliteConnection.cursor()
         try:
-            insertQuery = f"INSERT INTO USERS(UserName, Password) VALUES('{user.userName}', '{user.password}')"
-            usrCursor.execute(insertQuery)
+            insertQuery = f"INSERT INTO USERS(UserName, Password, Logged_in) VALUES(?, ?, ?)"
+            usrCursor.execute(insertQuery, (user.userName, user.password, user.loggedIn))
             self.sqliteConnection.commit()
         except sq.Error as error:
             # 2067 is the error given when an unique constraint is failed
             # only works in python 3.11!!
             if error.sqlite_errorcode == 2067:
                 print("Please select a different username.")
-                print(
-                    "Something went wrong while adding the user to the database: ",
-                    error,
-                )
+                print("Something went wrong while adding the user to the database: ", error)
         finally:
             usrCursor.close()
+
+    def changeUserLoggedIn(self, user: User):
+        updateCursor = self.sqliteConnection.cursor()
+        user.loggedIn = True
+        updateQuery = "UPDATE USERS SET Logged_in = ? WHERE UserName = ?"
+        try:
+            updateCursor.execute(updateQuery, (user.loggedIn, user.userName))
+            self.sqliteConnection.commit()
+        except sq.Error as error:
+            print("Error occured while updating Users table: ", error)
+        finally:
+            updateCursor.close()
+
+    def getLoggedInUser(self):
+        loginCursor = self.sqliteConnection.cursor()
+        try:
+            loginCursor.execute("SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1")
+            print(loginCursor.fetchone())
+        except sq.Error as error:
+            print("Error occured while selecting from USERS: ", error)
+        finally:
+            loginCursor.close()
 
     def addMusic(self, music: Music):
         musicCursor = self.sqliteConnection.cursor()
         try:
-            insertQuery = (
-                f"INSERT INTO MUSIC (MusicName, Artist, Album, Genre, PathToMusic) VALUES ('{music.musicName}', "
-                f"'{music.artist}', '{music.album}', '{music.genre}', '{music.pathToMusic}') "
-            )
-            musicCursor.execute(insertQuery)
+            insertQuery = f"INSERT INTO MUSIC (MusicName, Artist, Album, Genre, PathToMusic) VALUES (?, ?, ?, ?, ?)"
+            musicCursor.execute(insertQuery,
+                                (music.musicName, music.artist, music.album, music.genre, music.pathToMusic))
             musicCursor.execute("Select * from MUSIC")
             # for row in musicCursor:
             #     print(row)
@@ -74,9 +92,7 @@ class DbConnection:
     def getUser(self, username: str) -> User:
         userCursor = self.sqliteConnection.cursor()
         try:
-            selectQuery = (
-                f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'"
-            )
+            selectQuery = f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'"
             userCursor.execute(selectQuery)
             fetching = userCursor.fetchone()
             assert fetching is not None
@@ -92,11 +108,6 @@ class DbConnection:
         finally:
             userCursor.close()
 
-    def getLoggedInUser(self) -> User:
-        # return self.getUser("taha")
-        return User(None, None)
-
-    #
     def getMusics(self, musicName: str) -> list[Music]:
         musicCursor = self.sqliteConnection.cursor()
         try:
@@ -107,14 +118,7 @@ class DbConnection:
             musicList = [Music(None, None)]
             for music in selectQueryResult:
                 musicList.append(
-                    Music(
-                        musicName=music[1],
-                        pathToMusic=music[5],
-                        artist=music[2],
-                        album=music[3],
-                        genre=music[4],
-                    )
-                )
+                    Music(musicName=music[1], pathToMusic=music[5], artist=music[2], album=music[3], genre=music[4]))
             musicList.pop(0)
             return musicList
         except sq.Error as error:
@@ -129,4 +133,6 @@ class DbConnection:
 
 if __name__ == "__main__":
     sqlcon = DbConnection()
-    sqlcon.addUser(User("taha", "taha2003"))
+    sqlcon.addMusic(
+        Music("Stranded", "music/Gojira - Stranded [OFFICIAL VIDEO].ogg", artist="Gojira", genre="Metal",
+              album="Magma"))

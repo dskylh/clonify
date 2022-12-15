@@ -140,4 +140,7 @@ cython_debug/
 
 /music/*
 /.idea
+*.wav
+*.ogg
+*.mp3
 
