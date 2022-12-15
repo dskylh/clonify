@@ -1,9 +1,17 @@
-from customtkinter import END, CTk, CTkButton, CTkEntry, CTkLabel, CTkToplevel, StringVar
+from customtkinter import (
+    END,
+    CTk,
+    CTkButton,
+    CTkEntry,
+    CTkLabel,
+    CTkToplevel,
+    StringVar,
+)
 from db import DbConnection, User
 from sqlite3 import Error as SqError
 
-
 # from user import User
+
 
 class Login(CTkToplevel):
     def __init__(self, mainWindow: CTk, db: DbConnection):
@@ -14,8 +22,6 @@ class Login(CTkToplevel):
         self.title("Giriş")
 
         self.minsize(350, 250)
-
-        # self.grid_columnconfigure(1, weight=2)
 
         self.username = StringVar()
         self.password = StringVar()
@@ -49,17 +55,22 @@ class Login(CTkToplevel):
                 self.infoLabel.configure(text="Sifreniz yanlis!")
             else:
                 self.infoLabel.configure(text="Giris basarili!")
+                # ONEMLI/IMPORTANT database giris yapan kullaniciyi bildir!
+                self.destroy()
 
         except AssertionError:
             self.infoLabel.configure(text="Kullanici adinizi kontrol ediniz.")
 
         except SqError:
             print("Error occured while connecting to the database: ", SqError)
-            self.infoLabel.configure(text="Veri tabanına bağlanırken bir problem yaşandı")
-
+            self.infoLabel.configure(
+                text="Veri tabanına bağlanırken bir problem yaşandı"
+            )
 
         finally:
-            self.infoLabel.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we")
+            self.infoLabel.grid(
+                row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we"
+            )
 
     def register(self):
         try:
@@ -76,6 +87,10 @@ class Login(CTkToplevel):
                 self.infoLabel.configure(text="Bu kullanici adi zaten kayitli.")
         except SqError:
             print("Error occured while connecting to the database: ", SqError)
-            self.infoLabel.configure(text="Veri tabanına bağlanırken bir problem yaşandı")
+            self.infoLabel.configure(
+                text="Veri tabanına bağlanırken bir problem yaşandı"
+            )
         finally:
-            self.infoLabel.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we")
+            self.infoLabel.grid(
+                row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we"
+            )
