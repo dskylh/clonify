@@ -26,12 +26,10 @@ class App(CTk):
         self.songButton = CTkButton(self, text="Song", command=self.player.playMusic)
         self.logoutButton = CTkButton(self, text="Log Out", command=self.logOutUser)
 
-        self.logoutButton.grid(row=0, column=1, sticky="ne")
-        self.songButton.grid(row=1, column=1, sticky="n")
-        self.songSelect = songSelect(self, self.library)
-        self.songSelect.grid(
-            row=0, column=0, rowspan=3, sticky="nsew", padx=10, pady=10
-        )
+        self.logoutButton.grid(row=0, column=1, columnspan=3, sticky="nswe")
+        self.songButton.grid(row=1, column=1, columnspan=3, sticky="nswe")
+        self.songSelect = songSelect(self, self.library, self.player)
+        self.songSelect.grid(row=0, column=0, rowspan=3, sticky="nsew")
 
     def showLoginScreen(self):
         Login(self, self.db).deiconify()

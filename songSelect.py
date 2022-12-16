@@ -20,4 +20,5 @@ class songSelect(CTkFrame):
     def changeCurrentMusic(self, music: Music):
         self.mainWindow.currentMusic = music
         self.player.current = music
-        print(self.mainWindow.currentMusic.musicName)
+        print("mainwindow: ", self.mainWindow.currentMusic)
+        print("player: ", self.player.current)
