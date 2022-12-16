@@ -77,6 +77,7 @@ class DbConnection:
         try:
             logOutQuery = "UPDATE USERS SET Logged_in = 0 WHERE Logged_in = 1"
             logOutCursor.execute(logOutQuery)
+            self.sqliteConnection.commit()
         except sq.Error as error:
             print("Error occured while updating Users table: ", error)
         finally:

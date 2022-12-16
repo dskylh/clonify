@@ -92,6 +92,16 @@ class Login(CTkToplevel):
 
     def register(self):
         try:
+            if (
+                self.username.get().isspace()
+                or self.passwordEntry.get().isspace()
+                or self.username.get().strip() == ""
+                or self.password.get().strip() == ""
+            ):
+                self.infoLabel.configure(
+                    text="Bos kullanici adi veya sifre girmeyiniz."
+                )
+                return
             username = self.username.get()
             password = self.password.get()
             user = self.db.getUser(username)

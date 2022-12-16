@@ -28,8 +28,7 @@ class App(CTk):
         self.logoutButton.pack()
 
     def showLoginScreen(self):
-        login = Login(self, self.db).loggedInUser
-        print(login.userName)
+        Login(self, self.db).deiconify()
 
     def logOutUser(self):
         self.db.logOutUser()
