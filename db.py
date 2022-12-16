@@ -89,7 +89,7 @@ class DbConnection:
                 "SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1"
             )
             loginUser = loginCursor.fetchone()
-
+            assert loginUser is not None
             userName = loginUser[0]
             password = loginUser[1]
             loggedIn = loginUser[2]
@@ -101,6 +101,9 @@ class DbConnection:
         except sq.Error as error:
             print("Error occured while selecting from USERS: ", error)
             return User(None, None, False)
+        except AssertionError:
+            return User(None, None, False)
+
         finally:
             loginCursor.close()
 

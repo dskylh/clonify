@@ -9,9 +9,7 @@ from customtkinter import (
 )
 from db import DbConnection, User
 from sqlite3 import Error as SqError
-
-
-# from user import User
+import time
 
 
 class Login(CTkToplevel):
@@ -47,10 +45,23 @@ class Login(CTkToplevel):
         self.registerButton.grid(row=3, columnspan=2, padx=10, pady=5, sticky="we")
 
         self.infoLabel = CTkLabel(self, text="")
+        self.protocol("WM_DELETE_WINDOW", lambda: None)
+        self.grab_set()
 
     def login(self):
         try:
-            if self.loggedInUser is not None:
+            if (
+                self.username.get().isspace()
+                or self.passwordEntry.get().isspace()
+                or self.username.get().strip() == ""
+                or self.password.get().strip() == ""
+            ):
+                self.infoLabel.configure(
+                    text="Bos kullanici adi veya sifre girmeyiniz."
+                )
+                return
+
+            if self.loggedInUser.userName is not None:
                 print("A user is already logged in")
                 return
             user = self.db.getUser(self.username.get())
@@ -72,9 +83,12 @@ class Login(CTkToplevel):
             )
 
         finally:
+            self.loggedInUser = self.db.getLoggedInUser()
             self.infoLabel.grid(
                 row=4, column=0, columnspan=2, padx=10, pady=10, sticky="we"
             )
+            if self.loggedInUser.userName is not None:
+                self.after(2000, self.destroy)
 
     def register(self):
         try:

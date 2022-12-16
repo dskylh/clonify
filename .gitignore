@@ -144,3 +144,4 @@ cython_debug/
 *.ogg
 *.mp3
 
+clonify.db-journal
