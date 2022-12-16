@@ -1,4 +1,5 @@
 from customtkinter import *
+from songSelect import songSelect
 
 from db import DbConnection
 from login import Login
@@ -23,9 +24,13 @@ class App(CTk):
         self.songButton = CTkButton(self, text="Song", command=self.player.playMusic)
         self.logoutButton = CTkButton(self, text="Log Out", command=self.logOutUser)
 
-        self.songButton.pack()
-        self.songOptionMenu.pack()
-        self.logoutButton.pack()
+        self.logoutButton.grid(row=0, column=1, sticky="ne")
+        self.songButton.grid(row=1, column=1, sticky="n")
+        # self.songOptionMenu.
+        self.songSelect = songSelect(self, self.library)
+        self.songSelect.grid(
+            row=0, column=0, rowspan=3, sticky="nsew", padx=10, pady=10
+        )
 
     def showLoginScreen(self):
         Login(self, self.db).deiconify()
