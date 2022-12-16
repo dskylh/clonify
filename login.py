@@ -17,7 +17,6 @@ from sqlite3 import Error as SqError
 class Login(CTkToplevel):
     def __init__(self, mainWindow: CTk, db: DbConnection):
         super().__init__(mainWindow)
-
         self.db = db
 
         self.title("Giriş")
@@ -61,7 +60,6 @@ class Login(CTkToplevel):
                 self.infoLabel.configure(text="Sifreniz yanlis!")
             else:
                 self.db.changeUserLoggedIn(user)
-
                 self.infoLabel.configure(text="Giris basarili!")
 
         except AssertionError:

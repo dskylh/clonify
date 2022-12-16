@@ -61,24 +61,46 @@ class DbConnection:
     def changeUserLoggedIn(self, user: User):
         updateCursor = self.sqliteConnection.cursor()
         user.loggedIn = True
-        updateQuery = "UPDATE USERS SET Logged_in = ? WHERE UserName = ?"
+        updateLoggedInUser = "UPDATE USERS SET Logged_in = ? WHERE UserName = ?"
+        cleanup = "UPDATE USERS SET Logged_in = 0 WHERE Logged_in = 1"
         try:
-            updateCursor.execute(updateQuery, (user.loggedIn, user.userName))
+            updateCursor.execute(cleanup)
+            updateCursor.execute(updateLoggedInUser, (user.loggedIn, user.userName))
             self.sqliteConnection.commit()
         except sq.Error as error:
             print("Error occured while updating Users table: ", error)
         finally:
             updateCursor.close()
 
-    def getLoggedInUser(self):
+    def logOutUser(self):
+        logOutCursor = self.sqliteConnection.cursor()
+        try:
+            logOutQuery = "UPDATE USERS SET Logged_in = 0 WHERE Logged_in = 1"
+            logOutCursor.execute(logOutQuery)
+        except sq.Error as error:
+            print("Error occured while updating Users table: ", error)
+        finally:
+            logOutCursor.close()
+
+    def getLoggedInUser(self) -> User:
         loginCursor = self.sqliteConnection.cursor()
         try:
             loginCursor.execute(
                 "SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1"
             )
-            print(loginCursor.fetchone())
+            loginUser = loginCursor.fetchone()
+
+            userName = loginUser[0]
+            password = loginUser[1]
+            loggedIn = loginUser[2]
+            if loggedIn == 1:
+                loggedIn = True
+            else:
+                loggedIn = False
+            return User(userName, password, loggedIn)
         except sq.Error as error:
             print("Error occured while selecting from USERS: ", error)
+            return User(None, None, False)
         finally:
             loginCursor.close()
 
