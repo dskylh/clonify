@@ -39,15 +39,22 @@ class DbConnection:
     def addUser(self, user: User):
         usrCursor = self.sqliteConnection.cursor()
         try:
-            insertQuery = f"INSERT INTO USERS(UserName, Password, Logged_in) VALUES(?, ?, ?)"
-            usrCursor.execute(insertQuery, (user.userName, user.password, user.loggedIn))
+            insertQuery = (
+                f"INSERT INTO USERS(UserName, Password, Logged_in) VALUES(?, ?, ?)"
+            )
+            usrCursor.execute(
+                insertQuery, (user.userName, user.password, user.loggedIn)
+            )
             self.sqliteConnection.commit()
         except sq.Error as error:
             # 2067 is the error given when an unique constraint is failed
             # only works in python 3.11!!
             if error.sqlite_errorcode == 2067:
                 print("Please select a different username.")
-                print("Something went wrong while adding the user to the database: ", error)
+                print(
+                    "Something went wrong while adding the user to the database: ",
+                    error,
+                )
         finally:
             usrCursor.close()
 
@@ -66,7 +73,9 @@ class DbConnection:
     def getLoggedInUser(self):
         loginCursor = self.sqliteConnection.cursor()
         try:
-            loginCursor.execute("SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1")
+            loginCursor.execute(
+                "SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1"
+            )
             print(loginCursor.fetchone())
         except sq.Error as error:
             print("Error occured while selecting from USERS: ", error)
@@ -77,8 +86,16 @@ class DbConnection:
         musicCursor = self.sqliteConnection.cursor()
         try:
             insertQuery = f"INSERT INTO MUSIC (MusicName, Artist, Album, Genre, PathToMusic) VALUES (?, ?, ?, ?, ?)"
-            musicCursor.execute(insertQuery,
-                                (music.musicName, music.artist, music.album, music.genre, music.pathToMusic))
+            musicCursor.execute(
+                insertQuery,
+                (
+                    music.musicName,
+                    music.artist,
+                    music.album,
+                    music.genre,
+                    music.pathToMusic,
+                ),
+            )
             musicCursor.execute("Select * from MUSIC")
             # for row in musicCursor:
             #     print(row)
@@ -92,7 +109,9 @@ class DbConnection:
     def getUser(self, username: str) -> User:
         userCursor = self.sqliteConnection.cursor()
         try:
-            selectQuery = f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'"
+            selectQuery = (
+                f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'"
+            )
             userCursor.execute(selectQuery)
             fetching = userCursor.fetchone()
             assert fetching is not None
@@ -118,7 +137,14 @@ class DbConnection:
             musicList = [Music(None, None)]
             for music in selectQueryResult:
                 musicList.append(
-                    Music(musicName=music[1], pathToMusic=music[5], artist=music[2], album=music[3], genre=music[4]))
+                    Music(
+                        musicName=music[1],
+                        pathToMusic=music[5],
+                        artist=music[2],
+                        album=music[3],
+                        genre=music[4],
+                    )
+                )
             musicList.pop(0)
             return musicList
         except sq.Error as error:
@@ -134,5 +160,11 @@ class DbConnection:
 if __name__ == "__main__":
     sqlcon = DbConnection()
     sqlcon.addMusic(
-        Music("Stranded", "music/Gojira - Stranded [OFFICIAL VIDEO].ogg", artist="Gojira", genre="Metal",
-              album="Magma"))
+        Music(
+            "Stranded",
+            "music/Gojira - Stranded [OFFICIAL VIDEO].ogg",
+            artist="Gojira",
+            genre="Metal",
+            album="Magma",
+        )
+    )
