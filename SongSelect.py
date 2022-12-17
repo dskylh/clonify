@@ -1,16 +1,21 @@
+from customtkinter import CTkLabel, CTkButton, CTkFrame
+
 from music import Music
 from player import Player
-import customtkinter
 
 
-class SongSelect(customtkinter.CTkFrame):
+class SongSelect(CTkFrame):
     def __init__(self, main_window, music_list: list[Music], player: Player):
         super().__init__(main_window)
         self.mainWindow = main_window
         self.currentMusic = None
         self.player = player
         for music, rowcount in zip(music_list, range(len(music_list))):
-            self.button = customtkinter.CTkButton(
+            if music.music_name is None:
+                self.info_label = CTkLabel(text="Kütüphanenizde Hiç Şarkı Yok")
+                self.info_label.grid(row=0, column=0, padx=2.5, pady=2.5)
+                return
+            self.button = CTkButton(
                 master=self,
                 text=music.music_name + ", " + music.artist,
                 command=lambda m=music: self.changeCurrentMusic(m),
