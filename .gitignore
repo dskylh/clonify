@@ -146,3 +146,4 @@ cython_debug/
 
 clonify.db-journal
 deneme.py
+clonify.db
