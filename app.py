@@ -26,7 +26,6 @@ class App(customtkinter.CTk):
         print(self.login)
         self.musicNameList = [music.music_name for music in self.library]
         self.logoutButton = customtkinter.CTkButton(self, text="Log Out", command=self.logOutUser)
-
         self.logoutButton.grid(row=0, column=1, columnspan=3, sticky="ne")
         self.songSelect = SongSelect(self, self.library, self.player)
         self.songSelect.grid(row=0, column=0, rowspan=3, sticky="nsew")
