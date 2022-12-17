@@ -1,39 +1,52 @@
-from customtkinter import *
-
-import login
+import customtkinter
+from SongSelect import SongSelect
 from db import DbConnection
 from login import Login
 from player import Player
+from music import Music
+from typing import Optional
 
 
-class App(CTk):
+class App(customtkinter.CTk):
+    """
+    The main application class
+    """
     def __init__(self):
         super().__init__()
         self.db = DbConnection()
-        self.library = self.db.getMusics("")
+        self.library = self.db.get_musics("")
         self.player = Player(library=self.library)
-        self.loggedInUser = self.db.getLoggedInUser()
-        if self.loggedInUser.userName is None:
-            self.showLoginScreen()
+        self.loggedInUser = self.db.get_logged_in_user()
+        self.currentMusic: Music
+        print(self.loggedInUser.user_name)
+        self.login: Optional[Login] = None
+        if self.loggedInUser.user_name is None:
+            self.login = Login(self, self.db)
+            self.login.grab_set()
+        print(self.login)
+        self.musicNameList = [music.music_name for music in self.library]
+        self.logoutButton = customtkinter.CTkButton(self, text="Log Out", command=self.logOutUser)
 
-        self.musicNameList = [music.musicName for music in self.library]
-        self.songOptionMenu = CTkOptionMenu(
-            master=self, values=self.musicNameList, command=self.changeCurrentSong
-        )
-        self.songButton = CTkButton(self, text="Song", command=self.player.playMusic)
-
-        self.songButton.pack()
-        self.songOptionMenu.pack()
+        self.logoutButton.grid(row=0, column=1, columnspan=3, sticky="ne")
+        self.songSelect = SongSelect(self, self.library, self.player)
+        self.songSelect.grid(row=0, column=0, rowspan=3, sticky="nsew")
 
     def showLoginScreen(self):
-        login = Login(self, self.db).loggedInUser
-        print(login.userName)
+        """
+        Shows the login screen after a logout
+        :return: None
+        """
+        self.login = Login(self, self.db)
+        self.login.lift()
+        self.login.grab_set()
 
-    def changeCurrentSong(self, choice):
-        for music in self.library:
-            if music.musicName == choice:
-                self.player.current = music
-                break
+    def logOutUser(self):
+        """
+        Logs out the user
+        :return:
+        """
+        self.db.log_out_user()
+        self.showLoginScreen()
 
 
 if __name__ == "__main__":
