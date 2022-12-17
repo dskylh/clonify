@@ -13,8 +13,8 @@ import time
 
 
 class Login(CTkToplevel):
-    def __init__(self, mainWindow: CTk, db: DbConnection):
-        super().__init__(mainWindow)
+    def __init__(self, mainwindow: CTk, db: DbConnection):
+        super().__init__(mainwindow)
         self.db = db
 
         self.title("Giriş")
@@ -46,7 +46,7 @@ class Login(CTkToplevel):
 
         self.infoLabel = CTkLabel(self, text="")
         self.protocol("WM_DELETE_WINDOW", lambda: None)
-        self.grab_set()
+        self.wm_attributes("-topmost", True)
 
     def login(self):
         try:

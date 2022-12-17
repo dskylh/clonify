@@ -1,13 +1,13 @@
-from customtkinter import *
-from songSelect import songSelect
-
+import customtkinter
+from SongSelect import SongSelect
 from db import DbConnection
 from login import Login
 from player import Player
 from music import Music
+from typing import Optional
 
 
-class App(CTk):
+class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.db = DbConnection()
@@ -16,23 +16,22 @@ class App(CTk):
         self.loggedInUser = self.db.getLoggedInUser()
         self.currentMusic: Music
         print(self.loggedInUser.userName)
+        self.login: Optional[Login] = None
         if self.loggedInUser.userName is None:
-            self.showLoginScreen()
-
+            self.login = Login(self, self.db)
+            self.login.grab_set()
+        print(self.login)
         self.musicNameList = [music.musicName for music in self.library]
-        # self.songOptionMenu = CTkOptionMenu(
-        #     master=self, values=self.musicNameList, command=self.changeCurrentSong
-        # )
-        self.songButton = CTkButton(self, text="Song", command=self.player.playMusic)
-        self.logoutButton = CTkButton(self, text="Log Out", command=self.logOutUser)
+        self.logoutButton = customtkinter.CTkButton(self, text="Log Out", command=self.logOutUser)
 
-        self.logoutButton.grid(row=0, column=1, columnspan=3, sticky="nswe")
-        self.songButton.grid(row=1, column=1, columnspan=3, sticky="nswe")
-        self.songSelect = songSelect(self, self.library, self.player)
+        self.logoutButton.grid(row=0, column=1, columnspan=3, sticky="ne")
+        self.songSelect = SongSelect(self, self.library, self.player)
         self.songSelect.grid(row=0, column=0, rowspan=3, sticky="nsew")
 
     def showLoginScreen(self):
-        Login(self, self.db).deiconify()
+        self.login = Login(self, self.db)
+        self.login.lift()
+        self.login.grab_set()
 
     def logOutUser(self):
         self.db.logOutUser()

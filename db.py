@@ -123,8 +123,6 @@ class DbConnection:
                 ),
             )
             musicCursor.execute("Select * from MUSIC")
-            # for row in musicCursor:
-            #     print(row)
             self.sqliteConnection.commit()
 
         except sq.Error as error:

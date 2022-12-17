@@ -1,17 +1,17 @@
 from music import Music
 from player import Player
-from customtkinter import *
+import customtkinter
 
 
-class songSelect(CTkFrame):
-    def __init__(self, mainWindow, musicList: list[Music], player: Player):
-        super().__init__(mainWindow)
-        self.mainWindow = mainWindow
+class SongSelect(customtkinter.CTkFrame):
+    def __init__(self, mainwindow, musiclist: list[Music], player: Player):
+        super().__init__(mainwindow)
+        self.mainWindow = mainwindow
         self.currentMusic = None
         self.player = player
 
-        for music, rowcount in zip(musicList, range(len(musicList))):
-            self.button = CTkButton(
+        for music, rowcount in zip(musiclist, range(len(musiclist))):
+            self.button = customtkinter.CTkButton(
                 master=self,
                 text=music.musicName + ", " + music.artist,
                 command=lambda m=music: self.changeCurrentMusic(m),
@@ -20,5 +20,4 @@ class songSelect(CTkFrame):
     def changeCurrentMusic(self, music: Music):
         self.mainWindow.currentMusic = music
         self.player.current = music
-        print("mainwindow: ", self.mainWindow.currentMusic)
-        print("player: ", self.player.current)
+        self.player.playMusic()

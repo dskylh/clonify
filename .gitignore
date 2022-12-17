@@ -145,3 +145,4 @@ cython_debug/
 *.mp3
 
 clonify.db-journal
+deneme.py
