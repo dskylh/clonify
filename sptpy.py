@@ -12,6 +12,6 @@ redirect_uri = os.environ["SPOTIPY_REDIRECT_URI"]
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
 
 
-def search_music(music: Music):
-    # todo implement
-    return "todo"
+def search_music(file_name: str):
+    results = spotify.search(q="track:" + file_name, type="track")
+    print(results)
