@@ -26,7 +26,7 @@ class App(customtkinter.CTk):
             self.login = Login(self, self.db)
             self.login.grab_set()
         self.musicNameList = [music.music_name for music in self.library]
-        self.songSelect = SongSelect(self, self.library, self.player)
+        self.songSelect = SongSelect(self, self.player, self.db)
         self.songSelect.grid(row=0, column=0, sticky="nsw")
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
