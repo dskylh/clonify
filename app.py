@@ -5,6 +5,7 @@ from login import Login
 from player import Player
 from music import Music
 from userMenu import UserMenu
+from fileMenu import FileMenu
 
 
 class App(customtkinter.CTk):
@@ -24,13 +25,7 @@ class App(customtkinter.CTk):
         if self.loggedInUser.user_name is None:
             self.login = Login(self, self.db)
             self.login.grab_set()
-        print(self.login)
         self.musicNameList = [music.music_name for music in self.library]
-        # self.logoutButton = customtkinter.CTkButton(
-        #     self, text="Log Out", command=self.logOutUser
-        # )
-        #
-        # self.logoutButton.grid(row=0, column=1, sticky="ne")
         self.songSelect = SongSelect(self, self.library, self.player)
         self.songSelect.grid(row=0, column=0, sticky="nsw")
         self.rowconfigure(0, weight=1)
