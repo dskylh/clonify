@@ -12,6 +12,20 @@ redirect_uri = os.environ["SPOTIPY_REDIRECT_URI"]
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
 
 
-def search_music(file_name: str):
-    results = spotify.search(q="track:" + file_name, type="track")
-    print(results)
+def search_music(file_path: str):
+    file_name = os.path.splitext(file_path)
+    results_track = spotify.search(q=file_name, type="track", limit=1)
+    results_artist = spotify.search(q=file_name, type="artist")
+
+    tracks = results_track["tracks"]["items"]
+    artists = results_artist["artists"]["items"]
+    track = tracks[0]
+    for artist in artists:
+        print(artist["genres"])
+    music_name = track["name"]
+    artist = track["artists"][0]["name"]
+    album = track["album"]["name"]
+    # genre = track["artists"][0]["genres"][0]
+
+
+search_music("Gojira")
