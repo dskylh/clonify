@@ -48,6 +48,8 @@ class SongSelect(CTkFrame):
         self.main_window.currentMusic = music
         self.player.library = self.library
         self.player.current = music
+        self.player.update_current_duration()
+        self.player.is_playing = False
         self.player.play_music()
         self.main_window.albumCover()
 
@@ -78,7 +80,6 @@ class SongSelect(CTkFrame):
         file_path = filedialog.askopenfilename(
             filetypes=[("Music Files", "*.mp3 *.ogg .wav .flac")]
         )
-        # music = music_by_hand(file_path)
         music = search_music(file_path)
         if music is None:
             return
