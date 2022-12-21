@@ -31,7 +31,6 @@ def search_cover(music: Music) -> str:
     results_album = spotify.search(q=music.album, type="album", limit=1)
     album = results_album["albums"]["items"][0]
     cover_url = album["images"][1]["url"]
-    print(cover_url)
     return cover_url
 
 

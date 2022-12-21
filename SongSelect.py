@@ -71,6 +71,7 @@ class SongSelect(CTkFrame):
                 master=self,
                 text=music.music_name + ", " + music.artist,
                 command=lambda m=music: self.changeCurrentMusic(m),
+                fg_color="#2b2b2b",
             ).pack(pady=2.5, padx=2.5)
 
     def open_music(self):

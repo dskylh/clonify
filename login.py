@@ -16,13 +16,14 @@ class Login(CTkToplevel):
     A top level window for users to login.
     """
 
-    def __init__(self, main_window: CTk, db: DbConnection):
+    def __init__(self, main_window, db: DbConnection):
         """
         Creates the window's widgets
         :param main_window:
         :param db:
         """
         super().__init__(main_window)
+        self.main_window = main_window
         self.db = db
 
         self.title("Giriş")
@@ -101,6 +102,7 @@ class Login(CTkToplevel):
             )
             if self.logged_in_user.user_name is not None:
                 self.after(700, self.destroy)
+                self.main_window.user_menu.set(self.logged_in_user.user_name)
 
     def register(self):
         """
