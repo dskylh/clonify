@@ -6,10 +6,12 @@ class Player:
     """
     Handles how the music will be played
     """
+
     def __init__(self, library: list[Music]):
         mixer.init()
         self.library = library
         self.current: Music = self.library[0]
+        self.is_playing = False
         # TODO handle if there is no music in database
 
     def play_music(self):
@@ -23,18 +25,20 @@ class Player:
                 self.current = m
                 mixer_music.load(self.current.path_to_music)
                 print("Calinan muzik: ", self.current.music_name)
-                mixer_music.play()
                 break
+        if not self.is_playing:
+            mixer_music.play()
+            self.is_playing = True
+        else:
+            self.resume_music()
 
     def change_music(self, current_music: Music):
         self.current = current_music
 
-    @staticmethod
-    def pause_music():
-        mixer_music.stop()
+    def pause_music(self):
+        mixer_music.pause()
 
-    @staticmethod
-    def resume_music():
+    def resume_music(self):
         mixer_music.unpause()
 
     def previous_music(self):
