@@ -23,3 +23,15 @@ def search_music(file_path: str) -> Music:
     results_artist = spotify.search(q=artist, type="artist")
     genres = results_artist["artists"]["items"][0]["genres"]
     return Music(music_name, file_path, artist, album, genres[0])
+
+
+def search_cover(music: Music) -> str:
+    results_album = spotify.search(q=music.album, type="album", limit=1)
+    album = results_album["albums"]["items"][0]
+    cover_url = album["images"][1]["url"]
+    return cover_url
+
+
+if __name__ == "__main__":
+    music = search_music("Silver - Gojira")
+    cover = search_cover(music)
