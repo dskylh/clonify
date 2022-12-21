@@ -15,6 +15,7 @@ class Login(CTkToplevel):
     """
     A top level window for users to login.
     """
+
     def __init__(self, main_window: CTk, db: DbConnection):
         """
         Creates the window's widgets
@@ -26,7 +27,7 @@ class Login(CTkToplevel):
 
         self.title("Giriş")
 
-        self.minsize(350, 250)
+        self.minsize(280, 200)
 
         self.logged_in_user = db.get_logged_in_user()
 
@@ -62,10 +63,10 @@ class Login(CTkToplevel):
         """
         try:
             if (
-                    self.username.get().isspace()
-                    or self.password_entry.get().isspace()
-                    or self.username.get().strip() == ""
-                    or self.password.get().strip() == ""
+                self.username.get().isspace()
+                or self.password_entry.get().isspace()
+                or self.username.get().strip() == ""
+                or self.password.get().strip() == ""
             ):
                 self.info_label.configure(
                     text="Bos kullanici adi veya sifre girmeyiniz."
@@ -108,10 +109,10 @@ class Login(CTkToplevel):
         """
         try:
             if (
-                    self.username.get().isspace()
-                    or self.password_entry.get().isspace()
-                    or self.username.get().strip() == ""
-                    or self.password.get().strip() == ""
+                self.username.get().isspace()
+                or self.password_entry.get().isspace()
+                or self.username.get().strip() == ""
+                or self.password.get().strip() == ""
             ):
                 self.info_label.configure(
                     text="Bos kullanici adi veya sifre girmeyiniz."

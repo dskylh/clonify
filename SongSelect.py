@@ -6,7 +6,6 @@ from customtkinter import CTkLabel, CTkButton, CTkFrame, CTkInputDialog, CTkTopl
 from music import Music
 from player import Player
 from db import DbConnection
-import os
 
 from sptpy import search_music
 
@@ -36,9 +35,9 @@ def music_by_hand(file_path) -> Optional[Music]:
 
 
 class SongSelect(CTkFrame):
-    def __init__(self, main_window, player: Player, db: DbConnection):
-        super().__init__(main_window)
-        self.mainWindow = main_window
+    def __init__(self, master, player: Player, db: DbConnection):
+        super().__init__(master)
+        self.main_window = master
         self.currentMusic = None
         self.player = player
         self.db = db
@@ -46,10 +45,11 @@ class SongSelect(CTkFrame):
         self.show_music_buttons()
 
     def changeCurrentMusic(self, music: Music):
-        self.mainWindow.currentMusic = music
+        self.main_window.currentMusic = music
         self.player.library = self.library
         self.player.current = music
         self.player.play_music()
+        self.main_window.albumCover()
 
     def show_music_buttons(self):
         for widget in self.winfo_children():

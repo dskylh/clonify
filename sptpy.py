@@ -13,7 +13,8 @@ spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
 
 
 def search_music(file_path: str) -> Music:
-    file_name = os.path.splitext(file_path)
+    file = os.path.splitext(file_path)
+    file_name = os.path.basename(file[0])
     results_track = spotify.search(q=file_name, type="track", limit=1)
     tracks = results_track["tracks"]["items"]
     track = tracks[0]
@@ -22,13 +23,15 @@ def search_music(file_path: str) -> Music:
     album = track["album"]["name"]
     results_artist = spotify.search(q=artist, type="artist")
     genres = results_artist["artists"]["items"][0]["genres"]
-    return Music(music_name, file_path, artist, album, genres[0])
+    music = Music(music_name, file_path, artist, album, genres[0])
+    return music
 
 
 def search_cover(music: Music) -> str:
     results_album = spotify.search(q=music.album, type="album", limit=1)
     album = results_album["albums"]["items"][0]
     cover_url = album["images"][1]["url"]
+    print(cover_url)
     return cover_url
 
 
