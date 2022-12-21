@@ -6,6 +6,7 @@ from player import Player
 from music import Music
 from userMenu import UserMenu
 from fileMenu import FileMenu
+from playerUi import PlayerUi
 
 
 class App(customtkinter.CTk):
@@ -27,11 +28,14 @@ class App(customtkinter.CTk):
             self.login.grab_set()
         self.musicNameList = [music.music_name for music in self.library]
         self.songSelect = SongSelect(self, self.player, self.db)
-        self.songSelect.grid(row=0, column=0, sticky="nsw")
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=1)
+        self.songSelect.grid(row=0, column=0, rowspan=2, sticky="nswe")
+        self.rowconfigure(0, weight=2)
+        # self.columnconfigure(0, weight=1)
         self.user_menu = UserMenu(self, self.loggedInUser, self.option_menu_callback)
-        self.user_menu.grid(row=0, column=1, sticky="ne")
+        self.user_menu.grid(row=0, column=2, sticky="ne")
+        self.player_ui = PlayerUi(self)
+        self.player_ui.grid(row=1, column=1, columnspan=2, sticky="s")
+        self.columnconfigure(1, weight=2)
 
     def showLoginScreen(self):
         """
