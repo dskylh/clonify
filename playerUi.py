@@ -47,8 +47,10 @@ class PlayerUi(CTkFrame):
         self.slider.grid(row=1, column=0, pady=5, sticky="we")
 
         min, secs = divmod(int(self.player.current_duration), 60)
+        min_cur, secs_cur = divmod(int(self.player.get_cur_pos()), 60)
+        print(min_cur, secs_cur)
 
-        self.duration_label = CTkLabel(self, text=f"{min}:{secs}")
+        self.duration_label = CTkLabel(self, text=f"{min_cur}:{secs_cur}/{min}:{secs}")
         self.duration_label.grid(row=1, column=3, sticky="e", padx=10)
 
         # self.rowconfigure(1, weight=2)
@@ -64,11 +66,14 @@ class PlayerUi(CTkFrame):
         self.song_slider(self.slider.get())
 
     def song_slider(self, value):
-        self.player.update_current_duration()
         self.slider.configure(to=int(self.player.current_duration))
         cur_pos = self.player.get_cur_pos()
         self.slider.set(cur_pos)
+        self.update_duration_label()
         if self.player.get_busy():
             self.after(100, lambda: self.song_slider(self.slider.get()))
-        else:
-            self.slider.tk_focusPrev
+
+    def update_duration_label(self):
+        min, secs = divmod(int(self.player.current_duration), 60)
+        min_cur, secs_cur = divmod(int(self.player.get_cur_pos()), 60)
+        self.duration_label.configure(text=f"{min_cur}:{secs_cur}/{min}:{secs}")

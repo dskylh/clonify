@@ -51,6 +51,7 @@ class SongSelect(CTkFrame):
         self.player.update_current_duration()
         self.player.is_playing = False
         self.player.play_music()
+        self.player.update_current_duration()
         self.main_window.albumCover()
         player_ui = self.main_window.player_ui
         player_ui.song_slider(player_ui.slider.get())
