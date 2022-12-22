@@ -52,6 +52,8 @@ class SongSelect(CTkFrame):
         self.player.is_playing = False
         self.player.play_music()
         self.main_window.albumCover()
+        player_ui = self.main_window.player_ui
+        player_ui.song_slider(player_ui.slider.get())
 
     def show_music_buttons(self):
         for widget in self.winfo_children():

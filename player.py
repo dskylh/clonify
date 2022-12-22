@@ -19,10 +19,6 @@ class Player:
 
         # TODO handle if there is no music in database
 
-    def update_current_duration(self):
-        self.current_duration = Sound(self.current.path_to_music).get_length()
-        print(self.current_duration)
-
     def play_music(self):
         """
         Plays the current music specified in the class.
@@ -65,3 +61,16 @@ class Player:
             self.current = self.library[previous_index]
             self.current_duration = Sound(self.current.path_to_music).get_length()
             mixer_music.load(self.current.path_to_music)
+
+    def update_current_duration(self):
+        self.current_duration = Sound(self.current.path_to_music).get_length()
+        return self.current_duration
+
+    def get_cur_pos(self):
+        return mixer_music.get_pos() / 1000
+
+    def set_cur_pos(self, pos):
+        mixer_music.set_pos(pos)
+
+    def get_busy(self):
+        return mixer_music.get_busy()

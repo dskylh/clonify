@@ -1,5 +1,4 @@
 import sqlite3 as sq
-
 from music import Music
 from user import User
 
@@ -46,19 +45,26 @@ class DbConnection:
     def adduser(self, user: User):
         """
         add a user to the USERS table
-        :param user: 
-        :return: 
+        :param user:
+        :return:
         """
         user_cursor = self.sqlite_connection.cursor()
         try:
-            insert_query = (f"INSERT INTO USERS(UserName, Password, Logged_in) VALUES(?, ?, ?)")
-            user_cursor.execute(insert_query, (user.user_name, user.password, user.logged_in))
+            insert_query = (
+                f"INSERT INTO USERS(UserName, Password, Logged_in) VALUES(?, ?, ?)"
+            )
+            user_cursor.execute(
+                insert_query, (user.user_name, user.password, user.logged_in)
+            )
             self.sqlite_connection.commit()
         except sq.Error as error:
             # 2067 is the error given when an unique constraint is failed
             if error.sqlite_errorcode == 2067:
                 print("Please select a different username.")
-                print("Something went wrong while adding the user to the database: ", error, )
+                print(
+                    "Something went wrong while adding the user to the database: ",
+                    error,
+                )
         finally:
             user_cursor.close()
 
@@ -74,7 +80,9 @@ class DbConnection:
         cleanup = "UPDATE USERS SET Logged_in = 0 WHERE Logged_in = 1"
         try:
             update_cursor.execute(cleanup)
-            update_cursor.execute(update_logged_in_user, (user.logged_in, user.user_name))
+            update_cursor.execute(
+                update_logged_in_user, (user.logged_in, user.user_name)
+            )
             self.sqlite_connection.commit()
         except sq.Error as error:
             print("Error occurred while updating Users table: ", error)
@@ -102,7 +110,9 @@ class DbConnection:
         """
         login_cursor = self.sqlite_connection.cursor()
         try:
-            login_cursor.execute("SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1")
+            login_cursor.execute(
+                "SELECT UserName, Password, Logged_in FROM USERS WHERE Logged_in = 1"
+            )
             login_user = login_cursor.fetchone()
             assert login_user is not None
             user_name = login_user[0]
@@ -130,8 +140,16 @@ class DbConnection:
         music_cursor = self.sqlite_connection.cursor()
         try:
             insert_query = f"INSERT INTO MUSIC (MusicName, Artist, Album, Genre, PathToMusic) VALUES (?, ?, ?, ?, ?)"
-            music_cursor.execute(insert_query,
-                                 (music.music_name, music.artist, music.album, music.genre, music.path_to_music,), )
+            music_cursor.execute(
+                insert_query,
+                (
+                    music.music_name,
+                    music.artist,
+                    music.album,
+                    music.genre,
+                    music.path_to_music,
+                ),
+            )
             music_cursor.execute("Select * from MUSIC")
             self.sqlite_connection.commit()
 
@@ -152,7 +170,9 @@ class DbConnection:
         """
         user_cursor = self.sqlite_connection.cursor()
         try:
-            select_query = (f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'")
+            select_query = (
+                f"SELECT UserName, Password FROM USERS WHERE UserName = '{username}'"
+            )
             user_cursor.execute(select_query)
             fetching = user_cursor.fetchone()
             assert fetching is not None
@@ -171,8 +191,8 @@ class DbConnection:
     def get_musics(self, music_name: str) -> list[Music]:
         """
         Searches the database for any musics matching the given name
-        :param music_name: 
-        :return: Returns a list of Music. If no music is found matching then it returns a list with a single 
+        :param music_name:
+        :return: Returns a list of Music. If no music is found matching then it returns a list with a single
         Music(None, None)
         """
         music_cursor = self.sqlite_connection.cursor()
@@ -183,8 +203,15 @@ class DbConnection:
             assert select_query_result is not None
             music_list = [Music(None, None)]
             for music in select_query_result:
-                music_list.append(Music(music_name=music[1], artist=music[2], album=music[3], genre=music[4],
-                                        path_to_music=music[5], ))
+                music_list.append(
+                    Music(
+                        music_name=music[1],
+                        artist=music[2],
+                        album=music[3],
+                        genre=music[4],
+                        path_to_music=music[5],
+                    )
+                )
             if len(music_list) != 1:
                 music_list.pop(0)
             return music_list
@@ -200,5 +227,12 @@ class DbConnection:
 
 if __name__ == "__main__":
     sqlcon = DbConnection()
-    sqlcon.add_music(Music("Stranded", "music/Gojira - Stranded [OFFICIAL VIDEO].ogg", artist="Gojira", genre="Metal",
-                           album="Magma", ))
+    sqlcon.add_music(
+        Music(
+            "Stranded",
+            "music/Gojira - Stranded [OFFICIAL VIDEO].ogg",
+            artist="Gojira",
+            genre="Metal",
+            album="Magma",
+        )
+    )
