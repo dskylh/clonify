@@ -44,7 +44,7 @@ class Login(CTkToplevel):
         self.username_entry = CTkEntry(self, textvariable=self.username)
         self.username_entry.grid(row=0, column=1, padx=10, sticky="w")
 
-        self.password_entry = CTkEntry(self, textvariable=self.password)
+        self.password_entry = CTkEntry(self, textvariable=self.password, show="*")
         self.password_entry.grid(row=1, column=1, padx=10, sticky="w")
 
         self.login_button = CTkButton(self, text="Giriş yap", command=self.login)
