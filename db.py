@@ -227,16 +227,3 @@ class DbConnection:
             return [Music(None, None)]
         finally:
             music_cursor.close()
-
-
-if __name__ == "__main__":
-    sqlcon = DbConnection()
-    sqlcon.add_music(
-        Music(
-            "Stranded",
-            "music/Gojira - Stranded [OFFICIAL VIDEO].ogg",
-            artist="Gojira",
-            genre="Metal",
-            album="Magma",
-        )
-    )
