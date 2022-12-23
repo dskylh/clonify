@@ -16,5 +16,5 @@ class UserMenu(CTkOptionMenu):
 
     def option_menu_callback(self, choice):
         if choice == self.CIKIS:
-            self.main_window.logOutUser()
             self.main_window.player.stop_music()
+            self.main_window.logOutUser()

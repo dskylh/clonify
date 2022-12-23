@@ -85,6 +85,10 @@ class Login(CTkToplevel):
             else:
                 self.db.change_user_logged_in(user)
                 self.info_label.configure(text="Giris basarili!")
+            player_ui = self.main_window.player_ui
+            player_ui.song_slider(player_ui.slider.get())
+            player = self.main_window.player
+            player_ui.play_button.configure(image=player_ui.play_button_image)
 
         except AssertionError:
             self.info_label.configure(text="Kullanici adinizi kontrol ediniz.")

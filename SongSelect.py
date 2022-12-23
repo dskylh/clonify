@@ -57,7 +57,7 @@ class SongSelect(CTkFrame):
         if self.player.get_busy():
             player_ui.play_button.configure(image=player_ui.pause_button_image)
         else:
-            player_ui.configure(image=player_ui.play_button_image)
+            player_ui.play_button.configure(image=player_ui.play_button_image)
 
     def show_music_buttons(self):
         for widget in self.winfo_children():
