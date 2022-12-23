@@ -188,16 +188,20 @@ class DbConnection:
         finally:
             user_cursor.close()
 
-    def get_musics(self, music_name: str) -> list[Music]:
-        """
-        Searches the database for any musics matching the given name
-        :param music_name:
-        :return: Returns a list of Music. If no music is found matching then it returns a list with a single
-        Music(None, None)
-        """
+    def get_musics(self, search_query: str, search_type="") -> list[Music]:
         music_cursor = self.sqlite_connection.cursor()
         try:
-            select_query = f"SELECT * FROM MUSIC where MusicName like '%{music_name}%'"
+            select_query = (
+                f"SELECT * FROM MUSIC where MusicName like '%{search_query}%'"
+            )
+            if search_type == "Albüm":
+                select_query = (
+                    f"SELECT * FROM MUSIC where Album like '%{search_query}%'"
+                )
+            elif search_type == "Sanatçı":
+                select_query = (
+                    f"SELECT * FROM MUSIC where Artist like '%{search_query}%'"
+                )
             music_cursor.execute(select_query)
             select_query_result = music_cursor.fetchall()
             assert select_query_result is not None
