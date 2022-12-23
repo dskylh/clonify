@@ -67,10 +67,12 @@ class PlayerUi(CTkFrame):
             to=100,
             orientation="vertical",
             height=50,
-            command=set_volume,
+            command=self.set_volume,
         )
 
-        self.volume_slider.grid(row=0, column=4, rowspan=2, sticky="ns")
+        self.volume_slider.grid(
+            row=0, column=4, rowspan=2, sticky="ns", padx=2.5, pady=2.5
+        )
 
         self.slider = CTkSlider(
             master=self,
@@ -108,8 +110,7 @@ class PlayerUi(CTkFrame):
         self.player.play_music()
         self.player.update_current_duration()
         self.main_window.albumCover()
-        player_ui = self.main_window.player_ui
-        player_ui.song_slider(player_ui.slider.get())
+        self.song_slider(self.slider.get())
 
     def play_previous(self):
         self.player.previous_music()
@@ -118,8 +119,7 @@ class PlayerUi(CTkFrame):
         self.player.play_music()
         self.player.update_current_duration()
         self.main_window.albumCover()
-        player_ui = self.main_window.player_ui
-        player_ui.song_slider(player_ui.slider.get())
+        self.song_slider(self.slider.get())
 
     def song_slider(self, value):
         self.slider.configure(to=int(self.player.current_duration))

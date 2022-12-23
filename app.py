@@ -1,5 +1,4 @@
 import customtkinter
-import tkinter as tk
 from SongSelect import SongSelect
 from db import DbConnection
 from login import Login
@@ -7,7 +6,6 @@ from player import Player
 from music import Music
 from sptpy import search_cover
 from userMenu import UserMenu
-from fileMenu import FileMenu
 from playerUi import PlayerUi
 from PIL import Image
 import requests
@@ -37,16 +35,27 @@ class App(customtkinter.CTk):
         self.musicNameList = [music.music_name for music in self.library]
 
         self.songSelect = SongSelect(self, self.player, self.db)
-        self.songSelect.grid(row=0, column=0, rowspan=2, sticky="nswe")
+        self.songSelect.grid(row=0, column=0, rowspan=4, sticky="nswe")
         self.rowconfigure(0, weight=1)
 
         self.player_ui = PlayerUi(self, self.player)
-        self.player_ui.grid(row=1, column=2, columnspan=2, sticky="nsew")
+        self.player_ui.grid(row=3, column=2, columnspan=2, sticky="nsew")
         self.columnconfigure(2, weight=1)
 
         self.user_menu = UserMenu(self, self.loggedInUser)
         self.user_menu.grid(row=0, column=3, sticky="ne", padx=2.5, pady=2.5)
         # self.columnconfigure(3, weight=2)
+
+        music_name = self.player.current.music_name
+        artist_name = self.player.current.artist
+        album_name = self.player.current.album
+
+        self.music_name_label = customtkinter.CTkLabel(
+            self, text=f"{artist_name} - {album_name} - {music_name}"
+        )
+        self.music_name_label.grid(row=1, column=1, columnspan=3, sticky="n", pady=3)
+
+        self.rowconfigure(1, weight=1)
 
         self.albumCover()
 
@@ -81,8 +90,14 @@ class App(customtkinter.CTk):
         self.cover_image_label = customtkinter.CTkLabel(
             self, image=cover_image, text="", height=300, width=300
         )
-        self.cover_image_label.grid(row=0, column=1, columnspan=3, sticky="")
-        # self.rowconfigure(1, weight=1)
+        self.cover_image_label.grid(row=0, column=1, columnspan=3, sticky="s")
+
+        music_name = self.player.current.music_name
+        artist_name = self.player.current.artist
+        album_name = self.player.current.album
+        self.music_name_label.configure(
+            text=f"{artist_name} - {album_name} - {music_name}"
+        )
 
 
 if __name__ == "__main__":
