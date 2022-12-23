@@ -96,6 +96,7 @@ class PlayerUi(CTkFrame):
     def play_pause(self):
         self.player.play_music()
         cur_image_button = self.play_button.cget("image")
+
         if cur_image_button is self.play_button_image:
             self.play_button.configure(image=self.pause_button_image)
         else:
@@ -103,23 +104,25 @@ class PlayerUi(CTkFrame):
 
         self.song_slider(self.slider.get())
 
-    def play_next(self):
-        self.player.next_music()
+    def update_ui(self):
         self.player.update_current_duration()
         self.player.is_playing = False
         self.player.play_music()
         self.player.update_current_duration()
         self.main_window.albumCover()
         self.song_slider(self.slider.get())
+        if self.player.get_busy():
+            self.play_button.configure(image=self.pause_button_image)
+        else:
+            self.play_button.configure(image=self.play_button_image)
+
+    def play_next(self):
+        self.player.next_music()
+        self.update_ui()
 
     def play_previous(self):
         self.player.previous_music()
-        self.player.update_current_duration()
-        self.player.is_playing = False
-        self.player.play_music()
-        self.player.update_current_duration()
-        self.main_window.albumCover()
-        self.song_slider(self.slider.get())
+        self.update_ui()
 
     def song_slider(self, value):
         self.slider.configure(to=int(self.player.current_duration))

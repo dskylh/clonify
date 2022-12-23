@@ -2,7 +2,7 @@ import sqlite3
 from tkinter import filedialog, messagebox
 from typing import Optional
 
-from customtkinter import CTkLabel, CTkButton, CTkFrame, CTkInputDialog, CTkToplevel
+from customtkinter import CTkLabel, CTkButton, CTkFrame, CTkInputDialog
 from music import Music
 from player import Player
 from db import DbConnection
@@ -55,6 +55,10 @@ class SongSelect(CTkFrame):
         self.main_window.albumCover()
         player_ui = self.main_window.player_ui
         player_ui.song_slider(player_ui.slider.get())
+        if self.player.get_busy():
+            player_ui.play_button.configure(image=player_ui.pause_button_image)
+        else:
+            player_ui.configure(image=player_ui.play_button_image)
 
     def show_music_buttons(self):
         for widget in self.winfo_children():
