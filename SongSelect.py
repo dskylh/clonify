@@ -1,13 +1,12 @@
 import sqlite3
 from tkinter import filedialog, messagebox
 from typing import Optional
-
 from customtkinter import CTkLabel, CTkButton, CTkFrame, CTkInputDialog, CTkOptionMenu
 from music import Music
 from player import Player
 from db import DbConnection
-
 from sptpy import search_music
+from searchMusic import SearchMusic
 
 
 def music_by_hand(file_path) -> Optional[Music]:
@@ -64,24 +63,22 @@ class SongSelect(CTkFrame):
         for widget in self.winfo_children():
             widget.destroy()
         add_music_button = CTkButton(self, text="Sarki ekle", command=self.open_music)
-        add_music_button.grid(row=0, column=0, padx=2.5, pady=2.5, sticky="wne")
+        add_music_button.grid(row=0, column=0, padx=2.5, pady=2.5, sticky="")
 
-        search_music_option_menu = CTkOptionMenu(
-            self,
-        )
-        self.library = self.db.get_musics("")
+        search_music = SearchMusic(self)
+        search_music.grid(row=1, column=0, padx=0.5, pady=2.5, sticky="")
 
         for music, rowcount in zip(self.library, range(len(self.library))):
             if music.music_name is None:
                 info_label = CTkLabel(self, text="Kütüphanenizde Hiç Şarkı Yok")
-                info_label.grid(row=1, column=0, padx=2.5, pady=2.5, sticky="wn")
+                info_label.grid(row=2, column=0, padx=2.5, pady=2.5, sticky="wn")
                 return
             CTkButton(
                 master=self,
                 text=music.music_name + ", " + music.artist,
                 command=lambda m=music: self.changeCurrentMusic(m),
                 fg_color="#2b2b2b",
-            ).grid(row=rowcount + 1, pady=2.5)
+            ).grid(row=rowcount + 2, pady=2.5)
 
     def open_music(self):
         file_path = filedialog.askopenfilename(

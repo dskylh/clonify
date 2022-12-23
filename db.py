@@ -188,7 +188,7 @@ class DbConnection:
         finally:
             user_cursor.close()
 
-    def get_musics(self, search_query: str, search_type="") -> list[Music]:
+    def get_musics(self, search_query, search_type="") -> list[Music]:
         music_cursor = self.sqlite_connection.cursor()
         try:
             select_query = (
