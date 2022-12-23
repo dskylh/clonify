@@ -81,3 +81,15 @@ class Player:
 
     def get_busy(self):
         return mixer_music.get_busy()
+
+    def get_music_vol(self):
+        """
+        Get music volume from mixer_music, multiplies it with 100
+        """
+        return mixer_music.get_volume() * 100
+
+    def set_music_vol(self, volume):
+        """
+        Set music volume for mixer_music, divieds it with 100
+        """
+        mixer_music.set_volume(volume / 100)
