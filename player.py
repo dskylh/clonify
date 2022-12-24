@@ -17,8 +17,6 @@ class Player:
         self.is_paused = False
         self.is_playing = False
 
-        # TODO handle if there is no music in database
-
     def play_music(self):
         """
         Plays the current music specified in the class.

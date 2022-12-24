@@ -19,19 +19,25 @@ class PlayerUi(CTkFrame):
         self.play_button = CTkButton(self, image=self.play_button_image, text="", width=40, height=40,
                                      fg_color="#2b2b2b", hover=False, )
 
-        # if the button isn't initialized then it gives an error so I added the command after it
+        # if the button isn't initialized then it gives an error, so I added the command after it
         self.play_button.configure(command=self.play_pause)
         self.play_button.grid(row=0, column=1, sticky="")
         self.rowconfigure(0, weight=1)
         # self.columnconfigure(1, weight=1)
 
-        self.previous_button = CTkButton(self, text="previous", width=40, height=40, fg_color="#2b2b2b", hover=False,
+        previous_button_image_pil = Image.open("img/previous_button.png")
+        self.previous_button_image = CTkImage(dark_image=previous_button_image_pil, size=(40, 40))
+        self.previous_button = CTkButton(self, image=self.previous_button_image, text="", width=40, height=40,
+                                         fg_color="#2b2b2b", hover=False,
                                          command=self.play_previous, )
 
         self.previous_button.grid(row=0, column=0, sticky="e")
         self.columnconfigure(0, weight=1)
 
-        self.next_button = CTkButton(self, text="next", width=40, height=40, fg_color="#2b2b2b", hover=False,
+        next_button_image_pil = Image.open("img/next_button.png")
+        self.next_button_image = CTkImage(dark_image=next_button_image_pil, size=(40, 40))
+        self.next_button = CTkButton(self, image=self.next_button_image, text="", width=40, height=40,
+                                     fg_color="#2b2b2b", hover=False,
                                      command=self.play_next, )
         self.next_button.grid(row=0, column=2, sticky="w")
         self.columnconfigure(2, weight=1)
@@ -39,7 +45,7 @@ class PlayerUi(CTkFrame):
         self.volume_slider = CTkSlider(master=self, from_=0, to=100, orientation="vertical", height=50,
                                        command=self.set_volume, )
 
-        self.volume_slider.grid(row=0, column=4, rowspan=2, sticky="ns", padx=2.5, pady=2.5)
+        self.volume_slider.grid(row=0, column=4, rowspan=2, sticky="ns", padx=2)
 
         self.slider = CTkSlider(master=self, from_=0, to=int(self.player.current_duration), command=self.song_slider, )
 
