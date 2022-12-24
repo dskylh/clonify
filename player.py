@@ -68,6 +68,10 @@ class Player:
             self.current = self.library[next_index]
             self.current_duration = Sound(self.current.path_to_music).get_length()
             mixer_music.load(self.current.path_to_music)
+        else:
+            self.current = self.library[0]
+            self.current_duration = Sound(self.current.path_to_music).get_length()
+            mixer_music.load(self.current.path_to_music)
 
     def update_current_duration(self):
         self.current_duration = Sound(self.current.path_to_music).get_length()

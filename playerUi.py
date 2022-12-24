@@ -11,84 +11,46 @@ class PlayerUi(CTkFrame):
         self.main_window = master
 
         play_button_image_pil = Image.open("img/play_button.png")
-        self.play_button_image = CTkImage(
-            dark_image=play_button_image_pil, size=(40, 40)
-        )
+        self.play_button_image = CTkImage(dark_image=play_button_image_pil, size=(40, 40))
 
         pause_button_image_pil = Image.open("img/pause_button.png")
-        self.pause_button_image = CTkImage(
-            dark_image=pause_button_image_pil, size=(40, 40)
-        )
+        self.pause_button_image = CTkImage(dark_image=pause_button_image_pil, size=(40, 40))
 
-        self.play_button = CTkButton(
-            self,
-            image=self.play_button_image,
-            text="",
-            width=40,
-            height=40,
-            fg_color="#2b2b2b",
-            hover=False,
-        )
+        self.play_button = CTkButton(self, image=self.play_button_image, text="", width=40, height=40,
+                                     fg_color="#2b2b2b", hover=False, )
 
-        # if the button isn't initialized then it gives an error so i added the command after it
+        # if the button isn't initialized then it gives an error so I added the command after it
         self.play_button.configure(command=self.play_pause)
         self.play_button.grid(row=0, column=1, sticky="")
         self.rowconfigure(0, weight=1)
         # self.columnconfigure(1, weight=1)
 
-        self.previous_button = CTkButton(
-            self,
-            text="previous",
-            width=40,
-            height=40,
-            fg_color="#2b2b2b",
-            hover=False,
-            command=self.play_previous,
-        )
+        self.previous_button = CTkButton(self, text="previous", width=40, height=40, fg_color="#2b2b2b", hover=False,
+                                         command=self.play_previous, )
 
         self.previous_button.grid(row=0, column=0, sticky="e")
         self.columnconfigure(0, weight=1)
 
-        self.next_button = CTkButton(
-            self,
-            text="next",
-            width=40,
-            height=40,
-            fg_color="#2b2b2b",
-            hover=False,
-            command=self.play_next,
-        )
+        self.next_button = CTkButton(self, text="next", width=40, height=40, fg_color="#2b2b2b", hover=False,
+                                     command=self.play_next, )
         self.next_button.grid(row=0, column=2, sticky="w")
         self.columnconfigure(2, weight=1)
 
-        self.volume_slider = CTkSlider(
-            master=self,
-            from_=0,
-            to=100,
-            orientation="vertical",
-            height=50,
-            command=self.set_volume,
-        )
+        self.volume_slider = CTkSlider(master=self, from_=0, to=100, orientation="vertical", height=50,
+                                       command=self.set_volume, )
 
-        self.volume_slider.grid(
-            row=0, column=4, rowspan=2, sticky="ns", padx=2.5, pady=2.5
-        )
+        self.volume_slider.grid(row=0, column=4, rowspan=2, sticky="ns", padx=2.5, pady=2.5)
 
-        self.slider = CTkSlider(
-            master=self,
-            from_=0,
-            to=int(self.player.current_duration),
-            command=self.song_slider,
-        )
+        self.slider = CTkSlider(master=self, from_=0, to=int(self.player.current_duration), command=self.song_slider, )
 
         self.slider.set(self.player.get_cur_pos())
         self.slider.grid(row=1, column=0, columnspan=3, pady=5, sticky="we")
         self.rowconfigure(1, weight=1)
 
-        min, secs = divmod(int(self.player.current_duration), 60)
+        minute, secs = divmod(int(self.player.current_duration), 60)
         min_cur, secs_cur = divmod(int(self.player.get_cur_pos()), 60)
 
-        self.duration_label = CTkLabel(self, text=f"{min_cur}:{secs_cur}/{min}:{secs}")
+        self.duration_label = CTkLabel(self, text=f"{min_cur}:{secs_cur}/{minute}:{secs}")
         self.duration_label.grid(row=1, column=3, sticky="e", padx=10)
 
         # self.rowconfigure(1, weight=2)
@@ -133,9 +95,9 @@ class PlayerUi(CTkFrame):
             self.after(100, lambda: self.song_slider(self.slider.get()))
 
     def update_duration_label(self):
-        min, secs = divmod(int(self.player.current_duration), 60)
+        minute, secs = divmod(int(self.player.current_duration), 60)
         min_cur, secs_cur = divmod(int(self.player.get_cur_pos()), 60)
-        self.duration_label.configure(text=f"{min_cur}:{secs_cur}/{min}:{secs}")
+        self.duration_label.configure(text=f"{min_cur}:{secs_cur}/{minute}:{secs}")
 
     def set_volume(self, value):
         self.player.set_music_vol(value)
