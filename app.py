@@ -21,6 +21,7 @@ class App(customtkinter.CTk):
         super().__init__()
         self.minsize(width=750, height=500)
         self.db = DbConnection()
+        self.title("Clonify")
 
         self.library = self.db.get_musics("")
         self.player = Player(library=self.library)
@@ -81,9 +82,9 @@ class App(customtkinter.CTk):
     def albumCover(self):
         response = requests.get(search_cover(self.player.current))
         data = response.content
-        file = io.BytesIO(data)
+        album_file = io.BytesIO(data)
 
-        self.cover_image = Image.open(file)
+        self.cover_image = Image.open(album_file)
         cover_image = customtkinter.CTkImage(
             dark_image=self.cover_image, size=(300, 300)
         )
